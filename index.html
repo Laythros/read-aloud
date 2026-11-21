@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Read Aloud</title>
+    <meta name="description" content="Listen to documents read aloud. Works offline." />
+    <meta name="theme-color" content="#F6F4EF" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#16181B" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Read Aloud" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <script type="module" crossorigin src="./assets/index-C8gwXqv6.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DGjbamZU.css">
+  <link rel="manifest" href="./manifest.webmanifest"></head>
+  <body>
+    <!-- Library -->
+    <section id="library" class="view">
+      <header class="topbar">
+        <h1>Read Aloud</h1>
+        <button id="lib-settings" class="icon-btn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+        </button>
+      </header>
+
+      <main class="library-body">
+        <div id="install-card" class="install-card" hidden>
+          <img src="icons/icon-192.png" alt="" class="install-icon" width="52" height="52" />
+          <div class="install-text">
+            <strong>Install Read Aloud</strong>
+            <p id="install-msg"></p>
+          </div>
+          <ol id="install-steps" class="install-steps" hidden></ol>
+          <div class="install-actions">
+            <button id="install-btn" class="btn primary big" hidden>Install app</button>
+            <button id="install-later" class="link-btn">Not now</button>
+          </div>
+        </div>
+
+        <div id="voice-banner" class="banner" hidden>
+          <div>
+            <strong>One-time setup:</strong> download a voice so documents can be read offline.
+            <span id="voice-banner-size"></span>
+          </div>
+          <button id="voice-banner-btn" class="btn primary">Download voice</button>
+        </div>
+
+        <div class="add-row">
+          <button id="add-file" class="btn primary big">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Add document
+          </button>
+          <button id="add-paste" class="btn big">Paste text</button>
+        </div>
+        <p class="hint">PDF (scanned ones too), Word (.docx), text, or a photo of a page. Documents stay on this device.</p>
+        <input
+          type="file"
+          id="file-input"
+          accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,image/*"
+          hidden
+        />
+
+        <ul id="doc-list" class="doc-list"></ul>
+        <div id="empty" class="empty" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+          <p>No documents yet.</p>
+          <p class="muted">Add a policy document and tap play to listen.</p>
+        </div>
+      </main>
+    </section>
+
+    <!-- Reader -->
+    <section id="reader" class="view" hidden>
+      <header class="topbar reader-bar">
+        <button id="back" class="icon-btn" aria-label="Back to documents">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <h2 id="doc-title"></h2>
+      </header>
+      <article id="doc-text" class="doc-text"></article>
+      <button id="jump-current" class="jump-pill" hidden>Back to where I am</button>
+
+      <footer id="player" class="player">
+        <div class="progress" id="progress" role="progressbar" aria-label="Progress through document">
+          <div id="progress-fill"></div>
+        </div>
+        <div class="player-meta">
+          <span id="time-left"></span>
+          <span id="status" aria-live="polite"></span>
+        </div>
+        <div class="controls">
+          <button id="speed" class="pill" aria-label="Reading speed">1×</button>
+          <button id="prev" class="icon-btn round" aria-label="Previous sentence">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 20L9 12l10-8v16Z"/><path d="M5 19V5"/></svg>
+          </button>
+          <button id="play" class="play-btn" aria-label="Play">
+            <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>
+            <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3.5v16H7zM13.5 4H17v16h-3.5z"/></svg>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+          <button id="next" class="icon-btn round" aria-label="Next sentence">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l10 8-10 8V4Z"/><path d="M19 5v14"/></svg>
+          </button>
+          <button id="voice-btn" class="pill" aria-label="Voice settings">Voice</button>
+        </div>
+      </footer>
+    </section>
+
+    <!-- Settings -->
+    <dialog id="settings" class="sheet">
+      <div class="sheet-head">
+        <h3>Voice &amp; settings</h3>
+        <button class="icon-btn" data-close aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="sheet-body">
+        <label class="section-label">Voice</label>
+        <div id="voice-list" class="voice-list" role="radiogroup" aria-label="Voice"></div>
+        <p id="engine-note" class="note"></p>
+
+        <div id="download-box" class="download-box" hidden>
+          <p id="download-text"></p>
+          <div class="progress big"><div id="download-fill"></div></div>
+          <button id="download-btn" class="btn primary wide">Download</button>
+        </div>
+
+        <label class="section-label">Text size</label>
+        <div class="segmented small" id="size-toggle" role="radiogroup" aria-label="Text size">
+          <button role="radio" data-size="s">A</button>
+          <button role="radio" data-size="m">A</button>
+          <button role="radio" data-size="l">A</button>
+        </div>
+
+        <label class="section-label">Storage</label>
+        <p id="storage-info" class="note"></p>
+        <button id="clear-voices" class="btn wide danger-text">Delete downloaded voices</button>
+
+        <label class="section-label">App</label>
+        <button id="check-update" class="btn wide">Check for updates</button>
+        <p class="note" id="app-info"></p>
+      </div>
+    </dialog>
+
+    <!-- Paste text -->
+    <dialog id="paste-dialog" class="sheet">
+      <form method="dialog" id="paste-form">
+        <div class="sheet-head">
+          <h3>Paste text</h3>
+          <button class="icon-btn" value="cancel" aria-label="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div class="sheet-body">
+          <input id="paste-title" class="field" placeholder="Title (optional)" autocomplete="off" />
+          <textarea id="paste-text" class="field" rows="10" placeholder="Paste the text you want read aloud"></textarea>
+          <button id="paste-save" class="btn primary wide" value="save">Add to library</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="update-banner" class="update-banner" hidden>
+      <span>A new version is ready.</span>
+      <button id="update-btn" class="btn primary">Update</button>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="busy" class="busy" hidden><span class="spinner"></span><span id="busy-text">Opening…</span></div>
+
+    <audio id="audio" preload="auto" playsinline></audio>
+  </body>
+</html>

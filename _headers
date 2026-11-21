@@ -1,0 +1,4 @@
+# Used by Cloudflare Pages / Netlify: lets the voice engine use several CPU cores.
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
